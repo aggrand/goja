@@ -718,12 +718,8 @@ func (vm *vm) saveCtx(ctx *vmContext) {
 }
 
 func (vm *vm) pushCtx() {
-	if len(vm.callStack) > vm.maxCallStackSize {
-		ex := &StackOverflowError{}
-		panic(&uncatchableException{
-			stack: &ex.stack,
-			err:   ex,
-		})
+	if vm.maxCallStackSize != 0 && len(vm.callStack)+1 >= vm.maxCallStackSize {
+		panic(rangeError("Maximum call stack size exceeded"))
 	}
 	vm.callStack = append(vm.callStack, vmContext{})
 	ctx := &vm.callStack[len(vm.callStack)-1]
