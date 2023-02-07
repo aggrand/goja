@@ -188,6 +188,7 @@ type Runtime struct {
 	idSeq uint64
 
 	stackDepth      int
+	stackDepthLimit int
 	stackTraceLimit int
 
 	limiter          *rate.Limiter
@@ -197,6 +198,10 @@ type Runtime struct {
 
 func (self *Runtime) Ticks() uint64 {
 	return self.ticks
+}
+
+func (self *Runtime) SetStackDepthLimit(limit int) {
+	self.stackDepthLimit = limit
 }
 
 // SetStackTraceLimit sets an upper limit to the number of stack frames that

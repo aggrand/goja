@@ -2100,10 +2100,10 @@ func TestStackOverflowCausesRangeError(t *testing.T) {
 	vm := New()
 	vm.SetMaxCallStackSize(10)
 	_, err := vm.RunString(`
-	function f() {
-		f();
-	}
-	f();
+	    function f() {
+                f();
+	    }
+	    f();
 	`)
 	if err == nil {
 		t.Fatal("Expected RangeError, but received nil.")
@@ -2117,19 +2117,18 @@ func TestStackOverflowRangeErrorCanBeCaught(t *testing.T) {
 	vm := New()
 	vm.SetMaxCallStackSize(10)
 	v, err := vm.RunString(`
-        let depthReached = 0;
-	function f() {
+            let depthReached = 0;
+	    function f() {
                 depthReached++;
 		f();
-	}
-        try {
+	    }
+            try {
 	        f();
-        } catch (e) {
-        }
-        depthReached;
+            } catch (e) {}
+            depthReached;
 	`)
-	if depthReached := v.ToInteger(); depthReached != 9 {
-		t.Fatal(fmt.Sprintf("Didn't reach a stack depth of 9. Instead reached %d", depthReached))
+	if depthReached := v.ToInteger(); depthReached != 11 {
+		t.Fatal(fmt.Sprintf("Didn't reach a stack depth of 11. Instead reached %d", depthReached))
 	}
 
 	if err != nil {

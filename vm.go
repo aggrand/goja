@@ -718,7 +718,7 @@ func (vm *vm) saveCtx(ctx *vmContext) {
 }
 
 func (vm *vm) pushCtx() {
-	if vm.maxCallStackSize != 0 && len(vm.callStack)+1 >= vm.maxCallStackSize {
+	if len(vm.callStack) > vm.maxCallStackSize {
 		panic(rangeError("Maximum call stack size exceeded"))
 	}
 	vm.callStack = append(vm.callStack, vmContext{})
@@ -2835,6 +2835,9 @@ func (numargs call) exec(vm *vm) {
 	obj := vm.toCallee(v)
 
 repeat:
+	if vm.r.stackDepthLimit != 0 && len(vm.callStack)+1 >= vm.r.stackDepthLimit {
+		panic(rangeError("Maximum call stack size exceeded"))
+	}
 	switch f := obj.self.(type) {
 	case *methodFuncObject:
 		vm.pc++
