@@ -2117,18 +2117,18 @@ func TestStackOverflowRangeErrorCanBeCaught(t *testing.T) {
 	vm := New()
 	vm.SetMaxCallStackSize(10)
 	v, err := vm.RunString(`
-            let depthReached = 0;
+            let callStackSize = 0;
 	    function f() {
-                depthReached++;
+                callStackSize++;
 		f();
 	    }
             try {
 	        f();
             } catch (e) {}
-            depthReached;
+            callStackSize;
 	`)
-	if depthReached := v.ToInteger(); depthReached != 11 {
-		t.Fatal(fmt.Sprintf("Didn't reach a stack depth of 11. Instead reached %d", depthReached))
+	if callStackSize := v.ToInteger(); callStackSize != 11 {
+		t.Fatal(fmt.Sprintf("Didn't reach a callstack size of 11. Instead reached %d", callStackSize))
 	}
 
 	if err != nil {
